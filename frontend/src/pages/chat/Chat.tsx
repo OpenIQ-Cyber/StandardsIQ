@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useContext, useLayoutEffect } from "react";
-import { CommandBarButton, IconButton, Dialog, DialogType, Stack } from "@fluentui/react";
+import { CommandBarButton, IconButton, Dialog, DialogType, Stack, TooltipHost } from "@fluentui/react";
 import { SquareRegular, ShieldLockRegular, ErrorCircleRegular } from "@fluentui/react-icons";
 
 import ReactMarkdown from "react-markdown";
@@ -10,7 +10,7 @@ import { isEmpty } from "lodash-es";
 import DOMPurify from 'dompurify';
 
 import styles from "./Chat.module.css";
-import Contoso from "../../assets/Contoso.svg";
+import Logo from "../../assets/Logo.svg";
 import { XSSAllowTags } from "../../constants/xssAllowTags";
 
 import {
@@ -588,12 +588,12 @@ const Chat = () => {
                         {!messages || messages.length < 1 ? (
                             <Stack className={styles.chatEmptyState}>
                                 <img
-                                    src={Contoso}
+                                    src={Logo}
                                     className={styles.chatIcon}
                                     aria-hidden="true"
                                 />
-                                <h1 className={styles.chatEmptyStateTitle}>Start chatting</h1>
-                                <h2 className={styles.chatEmptyStateSubtitle}>This chatbot is configured to answer your questions</h2>
+                                <h1 className={styles.chatEmptyStateTitle}>Start chatting with StandardsIQ</h1>
+                                <h2 className={styles.chatEmptyStateSubtitle}>This GPT is here to answer questions around Pearson Policy and Standards</h2>
                             </Stack>
                         ) : (
                             <div className={styles.chatMessageStream} style={{ marginBottom: isLoading ? "40px" : "0px" }} role="log">
@@ -718,8 +718,38 @@ const Chat = () => {
                                 onSend={(question, id) => {
                                     appStateContext?.state.isCosmosDBAvailable?.cosmosDB ? makeApiRequestWithCosmosDB(question, id) : makeApiRequestWithoutCosmosDB(question, id)
                                 }}
+                                chatInactive={disabledButton()}
                                 conversationId={appStateContext?.state.currentChat?.id ? appStateContext?.state.currentChat?.id : undefined}
                             />
+                            <Stack>
+                                <div className={styles.saveAsPS360ButtonContainer}>
+                                    <TooltipHost content={"Save to PS360"} >
+                                        <CommandBarButton
+                                            role="button"
+                                            id="save-ps360-btn"
+                                            styles={{
+                                                icon: {
+                                                    color: '#FFFFFF',
+                                                },
+                                                iconDisabled: {
+                                                    color: "#BDBDBD !important",
+                                                },
+                                                root: {
+                                                    color: '#FFFFFF',
+                                                    background: "radial-gradient(109.81% 107.82% at 100.1% 90.19%, #0F6CBD 33.63%, #2D87C3 70.31%, #8DDDD8 100%)",
+                                                },
+                                                rootDisabled: {
+                                                    background: "#F0F0F0"
+                                                }
+                                            }}
+                                            className={styles.saveAsPS360Button}
+                                            iconProps={{ iconName: 'Save' }}
+                                            onClick={() => {}}
+                                            aria-label="Save as PS360"
+                                        />
+                                    </TooltipHost>
+                                </div>
+                            </Stack>
                         </Stack>
                     </div>
                     {/* Citation Panel */}
